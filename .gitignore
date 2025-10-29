@@ -44,4 +44,12 @@ Thumbs.db
 # Logs
 *.log
 
+# Node / SvelteKit frontend
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
+frontend/.vite/
+frontend/.env
+frontend/.env.*
+
 

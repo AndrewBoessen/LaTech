@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body, #app {
+  height: 100%;
+}
+
+body {
+  @apply bg-background text-foreground font-sans antialiased;
+}
+
+.container {
+  @apply max-w-6xl mx-auto px-4;
+}
+
+.panel {
+  @apply bg-panel border border-border rounded-xl p-4;
+}
+
+.title {
+  @apply text-xl font-semibold;
+}
+
+.subtle { @apply text-sm text-muted; }
+
+button.btn { @apply bg-foreground text-background rounded-lg px-4 py-2 text-sm; }
+button.btn-outline { @apply border border-foreground text-foreground bg-background rounded-lg px-4 py-2 text-sm; }
+
+input, select, textarea { @apply rounded-lg; }
+
+
