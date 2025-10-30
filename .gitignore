@@ -52,4 +52,7 @@ frontend/.vite/
 frontend/.env
 frontend/.env.*
 
+# Ignore all data (images, uploads, pdf, processed files, etc.)
+data/
+
 

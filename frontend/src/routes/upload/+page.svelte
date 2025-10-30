@@ -34,19 +34,19 @@
   }
 </script>
 
-<section class="panel grid gap-4">
+<section class="panel grid gap-8">
   <div>
-    <h1 class="title mb-2">Upload</h1>
+    <h1 class="title mb-4">Upload</h1>
     <p class="subtle">Upload an image to begin the workflow.</p>
   </div>
-  <div class="grid gap-2">
+  <div class="grid gap-4">
     <input type="file" accept="image/*" on:change={onFile} />
-    <div class="flex gap-2 items-center">
+    <div class="flex gap-4 items-center">
       <button class="btn" on:click={doUpload}>Upload</button>
       <span class="subtle">{status}</span>
     </div>
     {#if preview}
-    <div class="border border-border rounded-xl overflow-hidden">
+    <div class="border border-border overflow-hidden">
       <img src={preview} alt="preview" class="w-full h-64 object-contain bg-white" />
     </div>
     {/if}

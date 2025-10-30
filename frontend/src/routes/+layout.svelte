@@ -2,20 +2,21 @@
   import '../app.css';
 </script>
 
-<div class="container py-6">
-  <header class="mb-6 flex items-center justify-between">
-    <a href="/" class="text-2xl font-semibold">LaTech</a>
-    <nav class="flex gap-4 text-sm">
-      <a href="/upload" class="underline">Upload</a>
-      <a href="/preprocess" class="underline">Preprocess</a>
-      <a href="/convert" class="underline">Convert</a>
-      <a href="/compile" class="underline">Compile</a>
-      <a href="/preview" class="underline">Preview</a>
-    </nav>
-  </header>
-  <slot />
-  <footer class="mt-10 text-center subtle">© {new Date().getFullYear()} LaTech</footer>
-  
+<div class="flex min-h-screen">
+  <nav class="w-64 bg-panel border-r border-border flex flex-col py-10 px-8 gap-2">
+    <a href="/" class="text-2xl font-bold mb-8">LaTech</a>
+    <a href="/upload" class="block py-3 px-3 text-lg font-semibold hover:bg-border">Upload</a>
+    <a href="/preprocess" class="block py-3 px-3 text-lg font-semibold hover:bg-border">Preprocess</a>
+    <a href="/convert" class="block py-3 px-3 text-lg font-semibold hover:bg-border">Convert</a>
+    <a href="/compile" class="block py-3 px-3 text-lg font-semibold hover:bg-border">Compile</a>
+    <a href="/preview" class="block py-3 px-3 text-lg font-semibold hover:bg-border">Preview</a>
+  </nav>
+  <main class="flex-1 flex flex-col">
+    <div class="container py-10 flex-1 flex flex-col">
+      <slot />
+    </div>
+    <footer class="mt-10 text-center subtle">© {new Date().getFullYear()} LaTech</footer>
+  </main>
 </div>
 
 

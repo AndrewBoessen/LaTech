@@ -24,16 +24,16 @@
   }
 </script>
 
-<section class="panel grid gap-4">
+<section class="panel grid gap-8">
   <div>
-    <h1 class="title mb-2">Compile</h1>
+    <h1 class="title mb-4">Compile</h1>
     <p class="subtle">Compile LaTeX text or an existing latexId to a PDF.</p>
   </div>
-  <div class="grid gap-3">
-    <label>LaTeX ID <input type="text" bind:value={latexId} placeholder="optional latexId" /></label>
-    <label>LaTeX</label>
-    <textarea class="w-full min-h-64" bind:value={latex} placeholder="% Paste LaTeX here or use an ID"></textarea>
-    <div class="flex gap-2 items-center">
+  <div class="grid gap-5">
+    <label for="latexId">LaTeX ID <input type="text" id="latexId" bind:value={latexId} placeholder="optional latexId" /></label>
+    <label for="latex">LaTeX</label>
+    <textarea id="latex" class="w-full min-h-64" bind:value={latex} placeholder="% Paste LaTeX here or use an ID"></textarea>
+    <div class="flex gap-4 items-center">
       <button class="btn" on:click={doCompile}>Compile</button>
       <span class="subtle">{status}</span>
     </div>
