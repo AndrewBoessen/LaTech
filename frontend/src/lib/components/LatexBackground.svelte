@@ -29,9 +29,10 @@
     snippet: string;
     progress: number;
     speed: number;
+    isTyping: boolean;
   };
 
-  const minDistance = 3; // Minimum distance in viewport units (vw/vh)
+  const minDistance = 4; // Minimum distance in viewport units (vw/vh)
 
   // Helper function to check distance between two points
   function isTooClose(
@@ -54,13 +55,11 @@
       newPos = { top: Math.random() * 100, left: Math.random() * 100 };
       attempts++;
       if (attempts > maxAttempts) {
-        console.log("BREAKING LOOP");
         break;
       } // Fallback if we can't find a spot
     } while (
       existingLines.some((line) => isTooClose(newPos, line, minDistance))
     );
-
     return newPos;
   }
 
@@ -76,6 +75,7 @@
         snippet: snippets[Math.floor(Math.random() * snippets.length)],
         progress: 0,
         speed: 20 + Math.random() * 50,
+        isTyping: true, // Set initial state
       });
     }
     return initialLines;
@@ -94,23 +94,37 @@
   onMount(() => {
     interval = setInterval(() => {
       lines = lines.map((line) => {
-        if (line.progress < line.snippet.length) {
-          return { ...line, progress: line.progress + 1 };
+        if (line.isTyping) {
+          // Currently typing
+          if (line.progress < line.snippet.length) {
+            // Keep typing
+            return { ...line, progress: line.progress + 1 };
+          } else {
+            // Finished typing, start deleting
+            return { ...line, isTyping: false };
+          }
         } else {
-          // reset to a new snippet
-          const otherLines = lines.filter((l) => l.key !== line.key);
-          const { top, left } = getNewPosition(otherLines);
-          return {
-            ...line,
-            snippet: randomSnippetNot(line.snippet),
-            progress: 0,
-            top,
-            left,
-            speed: 25 + Math.random() * 50,
-          };
+          // Currently deleting
+          if (line.progress > 0) {
+            // Keep deleting
+            return { ...line, progress: line.progress - 1 };
+          } else {
+            // Finished deleting (progress is 0), reset to a new snippet
+            const otherLines = lines.filter((l) => l.key !== line.key);
+            const { top, left } = getNewPosition(otherLines);
+            return {
+              ...line,
+              snippet: randomSnippetNot(line.snippet),
+              progress: 0,
+              top,
+              left,
+              speed: 25 + Math.random() * 50,
+              isTyping: true, // Start typing again
+            };
+          }
         }
       });
-    }, 80);
+    }, 50);
     return () => clearInterval(interval);
   });
 </script>
@@ -120,8 +134,24 @@
     <span
       class="latex-line"
       style="top: {line.top}vh; left: {line.left}vw; animation-duration: {line.speed}s;"
-      aria-hidden="true">{line.snippet.slice(0, line.progress)}</span
+      aria-hidden="true"
     >
+      <span style="visibility: hidden;">{line.snippet}</span>
+
+      <span
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          text-align: {line.isTyping ? 'left' : 'right'};
+        "
+      >
+        {line.isTyping
+          ? line.snippet.slice(0, line.progress)
+          : line.snippet.slice(line.snippet.length - line.progress)}
+      </span>
+    </span>
   {/each}
 </div>
 
@@ -138,17 +168,27 @@
   }
   .latex-line {
     position: absolute;
+
+    display: inline-block;
+
     white-space: pre;
     font-family: "Berkeley Mono", "Fira Mono", "Menlo", "monospace";
-    font-size: 1.2rem;
-    color: rgba(111, 120, 170, 0.32);
+    color: rgba(50, 50, 50, 0.32);
     text-shadow: 0 1px 10px rgba(55, 60, 80, 0.21);
     user-select: none;
-    letter-spacing: 1px;
     transition: color 1s;
+    font-size: 0;
   }
+
+  .latex-line > span {
+    font-size: 1.2rem;
+  }
+
   .latex-line:nth-child(odd) {
+    color: rgba(50, 50, 50, 0.32);
+  }
+
+  .latex-line:nth-child(odd) > span {
     font-size: 1.8rem;
-    color: rgba(131, 120, 200, 0.32);
   }
 </style>
