@@ -3,14 +3,14 @@
   $: src = pdfId ? `/api/pdf/${encodeURIComponent(pdfId)}` : '';
 </script>
 
-<section class="panel grid gap-4">
+<section class="panel grid gap-8">
   <div>
-    <h1 class="title mb-2">Preview PDF</h1>
+    <h1 class="title mb-4">Preview PDF</h1>
     <p class="subtle">Enter a pdfId to preview the compiled PDF.</p>
   </div>
-  <div class="grid gap-3">
+  <div class="grid gap-5">
     <label>PDF ID <input type="text" bind:value={pdfId} placeholder="paste pdfId" /></label>
-    <div class="border border-border rounded-xl overflow-hidden h-[70vh] bg-white">
+    <div class="border border-border overflow-hidden h-[70vh] bg-white">
       {#if src}
         <iframe src={src} title="PDF preview" class="w-full h-full" />
       {:else}
