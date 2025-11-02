@@ -1,6 +1,6 @@
 import uuid
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, PlainTextResponse
 
 from ..models.schemas import CompileRequest, CompileResponse
 from ..models import storage
@@ -29,6 +29,15 @@ def compile_latex(body: CompileRequest) -> CompileResponse:
     pdf_path = storage.path_for_pdf(pdf_id)
     compile_latex_to_pdf(latex_path, pdf_path)
     return CompileResponse(pdfId=pdf_id)
+
+
+@router.get("/latex/{latex_id}")
+def get_latex(latex_id: str):
+    storage.ensure_dirs()
+    latex_path = storage.path_for_latex(latex_id)
+    if not latex_path.exists():
+        raise HTTPException(status_code=404, detail="latexId not found")
+    return PlainTextResponse(latex_path.read_text(encoding="utf-8"))
 
 
 @router.get("/pdf/{pdf_id}")

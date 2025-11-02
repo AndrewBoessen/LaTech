@@ -27,6 +27,12 @@ body {
   @apply max-w-6xl mx-auto px-4;
 }
 
+@media (max-width: 640px) {
+  .container {
+    @apply px-2;
+  }
+}
+
 .panel {
   @apply bg-panel border border-border p-8 shadow-none;
 }

@@ -10,7 +10,7 @@
   </div>
   <div class="grid gap-5">
     <label>PDF ID <input type="text" bind:value={pdfId} placeholder="paste pdfId" /></label>
-    <div class="border border-border overflow-hidden h-[70vh] bg-white">
+    <div class="border border-border overflow-hidden h-screen max-h-screen bg-white">
       {#if src}
         <iframe src={src} title="PDF preview" class="w-full h-full" />
       {:else}
