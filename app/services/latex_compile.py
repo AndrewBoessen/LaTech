@@ -1,12 +1,63 @@
-from io import BytesIO
+"""This module provides a function to compile LaTeX source code to a PDF file."""
+
+import subprocess
+import shutil
 from pathlib import Path
 
 
-MINIMAL_PDF = b"""%PDF-1.4\n1 0 obj<<>>endobj\n2 0 obj<</Length 44>>stream\nBT /F1 12 Tf 72 720 Td (Placeholder PDF) Tj ET\nendstream endobj\n3 0 obj<</Type /Font /Subtype /Type1 /BaseFont /Helvetica>>endobj\n4 0 obj<</Type /Page /Parent 5 0 R /Resources <</Font <</F1 3 0 R>>>> /MediaBox [0 0 612 792] /Contents 2 0 R>>endobj\n5 0 obj<</Type /Pages /Kids [4 0 R] /Count 1>>endobj\n6 0 obj<</Type /Catalog /Pages 5 0 R>>endobj\nxref\n0 7\n0000000000 65535 f \n0000000010 00000 n \n0000000053 00000 n \n0000000170 00000 n \n0000000251 00000 n \n0000000401 00000 n \n0000000471 00000 n \ntrailer<</Size 7 /Root 6 0 R>>\nstartxref\n534\n%%EOF\n"""
+def compile_latex_to_pdf(
+    latex_source_path: Path, pdf_out_path: Path
+) -> tuple[bool, str | None]:
+    """Compiles a LaTeX source file to a PDF file using pdflatex.
 
+    Args:
+        latex_source_path: The path to the LaTeX source file.
+        pdf_out_path: The path to write the PDF file to.
 
-def compile_latex_to_pdf(latex_source_path: Path, pdf_out_path: Path) -> None:
-    # Placeholder: write a minimal PDF; ignore latex_source_path for now
-    pdf_out_path.write_bytes(MINIMAL_PDF)
+    Returns:
+        A tuple containing a boolean indicating success or failure, and an
+        error message if the compilation failed.
+    """
+    latex_content = latex_source_path.read_text(encoding="utf-8")
 
+    # Check if the content is a full document or just a fragment
+    if "\\documentclass" not in latex_content:
+        # Wrap the content in a minimal document structure
+        latex_content = f"""
+\\documentclass{{article}}
+\\begin{{document}}
+{latex_content}
+\\end{{document}}
+"""
+        latex_source_path.write_text(latex_content, encoding="utf-8")
 
+    command = [
+        "pdflatex",
+        "-output-directory",
+        str(pdf_out_path.parent),
+        str(latex_source_path),
+    ]
+
+    try:
+        # The `capture_output=True` argument captures the stdout and stderr streams,
+        # and `text=True` decodes them as text.
+        # The `check=True` argument raises a `CalledProcessError` if the command
+        # returns a non-zero exit code.
+        subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        # Move the generated PDF to the desired output path
+        generated_pdf = pdf_out_path.parent / latex_source_path.with_suffix(".pdf").name
+        shutil.move(generated_pdf, pdf_out_path)
+        return (True, None)
+    except subprocess.CalledProcessError as e:
+        # The error message from pdflatex is in the stderr stream
+        return (False, e.stderr)
+    except FileNotFoundError:
+        return (
+            False,
+            "pdflatex command not found. Is LaTeX installed and in your PATH?",
+        )

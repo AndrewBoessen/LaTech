@@ -47,7 +47,7 @@
     </div>
     {#if preview}
     <div class="border border-border overflow-hidden">
-      <img src={preview} alt="preview" class="w-full h-64 object-contain bg-white" />
+      <img src={preview} alt="preview" class="w-full max-h-64 object-contain bg-white" />
     </div>
     {/if}
   </div>

@@ -36,7 +36,7 @@
     <label class="flex items-center gap-2"><input type="checkbox" bind:checked={grayscale} /> Grayscale</label>
     <label class="flex items-center gap-2"><input type="checkbox" bind:checked={denoise} /> Denoise</label>
     <label>Threshold <input type="range" min="0" max="255" bind:value={threshold} /></label>
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
       <label>Width <input type="number" bind:value={width} min="1" placeholder="width" /></label>
       <label>Height <input type="number" bind:value={height} min="1" placeholder="height" /></label>
     </div>

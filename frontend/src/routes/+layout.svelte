@@ -28,12 +28,12 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
         </button>
-        <div class="{showMenu ? 'block' : 'hidden'} absolute right-0 w-1/4 min-w-40 origin-top-right bg-panel border border-border z-10">
-          <a href="/upload" class="block px-4 py-2 text-lg font-semibold hover:bg-border">Upload</a>
-          <a href="/preprocess" class="block px-4 py-2 text-lg font-semibold hover:bg-border">Preprocess</a>
-          <a href="/convert" class="block px-4 py-2 text-lg font-semibold hover:bg-border">Convert</a>
-          <a href="/compile" class="block px-4 py-2 text-lg font-semibold hover:bg-border">Compile</a>
-          <a href="/preview" class="block px-4 py-2 text-lg font-semibold hover:bg-border">Preview</a>
+        <div class="{showMenu ? 'block' : 'hidden'} absolute right-0 min-w-40 origin-top-right bg-panel border border-border z-10">
+          <a href="/upload" on:click={toggleMenu} class="block px-4 py-2 text-lg font-semibold hover:bg-border">Upload</a>
+          <a href="/preprocess" on:click={toggleMenu} class="block px-4 py-2 text-lg font-semibold hover:bg-border">Preprocess</a>
+          <a href="/convert" on:click={toggleMenu} class="block px-4 py-2 text-lg font-semibold hover:bg-border">Convert</a>
+          <a href="/compile" on:click={toggleMenu} class="block px-4 py-2 text-lg font-semibold hover:bg-border">Compile</a>
+          <a href="/preview" on:click={toggleMenu} class="block px-4 py-2 text-lg font-semibold hover:bg-border">Preview</a>
         </div>
       </div>
     </nav>

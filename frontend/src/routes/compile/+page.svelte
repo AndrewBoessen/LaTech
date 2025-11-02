@@ -1,8 +1,11 @@
 <script lang="ts">
   import { api, type CompileResp } from '$lib/api';
+  import { onMount } from 'svelte';
+
   let latexId = '';
   let latex = '';
   let pdfId: string | null = null;
+  let pdfUrl: string | null = null;
   let status = '';
 
   async function doCompile() {
@@ -17,11 +20,37 @@
         body: JSON.stringify(body)
       });
       pdfId = data.pdfId;
+      pdfUrl = `/api/pdf/${pdfId}`;
       status = `PDF: ${pdfId}`;
     } catch (e) {
       status = String(e);
     }
   }
+
+  async function fetchLatex() {
+    if (!latexId) return;
+    status = 'Fetching LaTeX...';
+    try {
+      const response = await fetch(`/api/latex/${latexId}`);
+      if (response.ok) {
+        latex = await response.text();
+        status = 'LaTeX loaded.';
+      } else {
+        status = 'Failed to load LaTeX.';
+      }
+    } catch (e) {
+      status = String(e);
+    }
+  }
+
+  onMount(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('latexId');
+    if (id) {
+      latexId = id;
+      fetchLatex();
+    }
+  });
 </script>
 
 <section class="panel grid gap-8">
@@ -39,5 +68,3 @@
     </div>
   </div>
 </section>
-
-

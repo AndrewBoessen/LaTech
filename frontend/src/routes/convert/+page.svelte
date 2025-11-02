@@ -31,7 +31,7 @@
       <span class="subtle">{status}</span>
     </div>
     <label>LaTeX</label>
-    <textarea class="w-full min-h-64" bind:value={latex} placeholder="% LaTeX will appear here…"></textarea>
+    <textarea class="w-full min-h-48" bind:value={latex} placeholder="% LaTeX will appear here…"></textarea>
   </div>
 </section>
 

@@ -32,7 +32,7 @@
     isTyping: boolean;
   };
 
-  const minDistance = 4; // Minimum distance in viewport units (vw/vh)
+  const minDistance = 5; // Minimum distance in viewport units (vw/vh)
 
   // Helper function to check distance between two points
   function isTooClose(
