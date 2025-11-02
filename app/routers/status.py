@@ -1,7 +1,8 @@
 """This module defines the API endpoints for checking the status of a job."""
+
 from fastapi import APIRouter
 
-from ..models.schemas import StatusResponse
+from models.schemas import StatusResponse
 
 
 router = APIRouter(prefix="/api", tags=["status"])

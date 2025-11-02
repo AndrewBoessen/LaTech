@@ -1,9 +1,10 @@
 """This module defines the API endpoints for uploading images."""
+
 import uuid
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
-from ..models.schemas import UploadResponse
-from ..models import storage
+from models.schemas import UploadResponse
+from models import storage
 
 
 router = APIRouter(prefix="/api", tags=["uploads"])

@@ -1,10 +1,11 @@
 """This module defines the API endpoints for preprocessing images."""
+
 import uuid
 from fastapi import APIRouter, HTTPException
 
-from ..models.schemas import PreprocessOptions, PreprocessResponse
-from ..models import storage
-from ..services.image_preprocess import apply_preprocessing
+from models.schemas import PreprocessOptions, PreprocessResponse
+from models import storage
+from services.image_preprocess import apply_preprocessing
 
 
 router = APIRouter(prefix="/api", tags=["preprocess"])

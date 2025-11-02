@@ -1,4 +1,5 @@
 """This module provides a function to convert an image to LaTeX using OCR."""
+
 from pathlib import Path
 
 

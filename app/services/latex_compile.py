@@ -1,9 +1,12 @@
 """This module provides a function to compile LaTeX source code to a PDF file."""
+
 from pathlib import Path
 from pylatex import Document, NoEscape
 
 
-def compile_latex_to_pdf(latex_source_path: Path, pdf_out_path: Path) -> tuple[bool, str | None]:
+def compile_latex_to_pdf(
+    latex_source_path: Path, pdf_out_path: Path
+) -> tuple[bool, str | None]:
     """Compiles a LaTeX source file to a PDF file.
 
     Args:
@@ -24,7 +27,7 @@ def compile_latex_to_pdf(latex_source_path: Path, pdf_out_path: Path) -> tuple[b
 
     # Compile the document
     try:
-        doc.generate_pdf(str(pdf_out_path.with_suffix('')), clean_tex=False)
+        doc.generate_pdf(str(pdf_out_path.with_suffix("")), clean_tex=False)
         return (True, None)
     except Exception as e:
         # Catching a broad exception because pylatex can raise a variety of

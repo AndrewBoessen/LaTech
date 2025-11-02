@@ -1,4 +1,5 @@
 """This module defines the storage paths for the application."""
+
 from pathlib import Path
 
 

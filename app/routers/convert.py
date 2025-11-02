@@ -1,10 +1,11 @@
 """This module defines the API endpoints for converting images to LaTeX."""
+
 import uuid
 from fastapi import APIRouter, HTTPException
 
-from ..models.schemas import ConvertResponse
-from ..models import storage
-from ..services.ocr_to_latex import convert_image_to_latex
+from models.schemas import ConvertResponse
+from models import storage
+from services.ocr_to_latex import convert_image_to_latex
 
 
 router = APIRouter(prefix="/api", tags=["convert"])

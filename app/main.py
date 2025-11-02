@@ -1,10 +1,10 @@
 """The main entrypoint for the LaTech FastAPI application."""
-from pathlib import Path
+
 import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import uploads, preprocess, convert, compile as compile_routes, status
+from routers import uploads, preprocess, convert, compile as compile_routes, status
 
 
 app = FastAPI(title="LaTech FastAPI App")
@@ -18,7 +18,7 @@ app.add_middleware(
     allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 
@@ -26,6 +26,7 @@ app.add_middleware(
 def health() -> dict:
     """A health check endpoint that returns the status of the application."""
     return {"status": "ok"}
+
 
 app.include_router(uploads.router)
 app.include_router(preprocess.router)

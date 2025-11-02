@@ -1,11 +1,12 @@
 """This module defines the API endpoints for compiling LaTeX to PDF."""
+
 import uuid
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse, PlainTextResponse
 
-from ..models.schemas import CompileRequest, CompileResponse
-from ..models import storage
-from ..services.latex_compile import compile_latex_to_pdf
+from models.schemas import CompileRequest, CompileResponse
+from models import storage
+from services.latex_compile import compile_latex_to_pdf
 
 
 router = APIRouter(prefix="/api", tags=["compile"])
@@ -38,7 +39,9 @@ def compile_latex(body: CompileRequest) -> CompileResponse:
     pdf_path = storage.path_for_pdf(pdf_id)
     success, error_message = compile_latex_to_pdf(latex_path, pdf_path)
     if not success:
-        raise HTTPException(status_code=400, detail=f"Failed to compile LaTeX: {error_message}")
+        raise HTTPException(
+            status_code=400, detail=f"Failed to compile LaTeX: {error_message}"
+        )
     return CompileResponse(pdfId=pdf_id)
 
 

@@ -1,11 +1,13 @@
 """This module provides a function for applying preprocessing to an image."""
+
 from pathlib import Path
-from typing import Optional
 
-from ..models.schemas import PreprocessOptions
+from models.schemas import PreprocessOptions
 
 
-def apply_preprocessing(src_path: Path, dst_path: Path, options: PreprocessOptions) -> None:
+def apply_preprocessing(
+    src_path: Path, dst_path: Path, options: PreprocessOptions
+) -> None:
     """Applies preprocessing to an image.
 
     Args:
