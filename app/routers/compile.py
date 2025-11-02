@@ -4,9 +4,9 @@ import uuid
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse, PlainTextResponse
 
-from models.schemas import CompileRequest, CompileResponse
-from models import storage
-from services.latex_compile import compile_latex_to_pdf
+from app.models.schemas import CompileRequest, CompileResponse
+from app.models import storage
+from app.services.latex_compile import compile_latex_to_pdf
 
 
 router = APIRouter(prefix="/api", tags=["compile"])

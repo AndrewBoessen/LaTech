@@ -3,8 +3,8 @@
 import uuid
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
-from models.schemas import UploadResponse
-from models import storage
+from app.models.schemas import UploadResponse
+from app.models import storage
 
 
 router = APIRouter(prefix="/api", tags=["uploads"])

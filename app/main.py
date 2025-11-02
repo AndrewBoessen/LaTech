@@ -4,7 +4,7 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import uploads, preprocess, convert, compile as compile_routes, status
+from app.routers import uploads, preprocess, convert, compile as compile_routes, status
 
 
 app = FastAPI(title="LaTech FastAPI App")

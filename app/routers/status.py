@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from models.schemas import StatusResponse
+from app.models.schemas import StatusResponse
 
 
 router = APIRouter(prefix="/api", tags=["status"])

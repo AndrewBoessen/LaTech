@@ -3,9 +3,9 @@
 import uuid
 from fastapi import APIRouter, HTTPException
 
-from models.schemas import ConvertResponse
-from models import storage
-from services.ocr_to_latex import convert_image_to_latex
+from app.models.schemas import ConvertResponse
+from app.models import storage
+from app.services.ocr_to_latex import convert_image_to_latex
 
 
 router = APIRouter(prefix="/api", tags=["convert"])

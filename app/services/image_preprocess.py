@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from models.schemas import PreprocessOptions
+from app.models.schemas import PreprocessOptions
 
 
 def apply_preprocessing(
