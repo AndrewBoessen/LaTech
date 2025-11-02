@@ -1,3 +1,4 @@
+"""The main entrypoint for the LaTech FastAPI application."""
 from pathlib import Path
 import os
 
@@ -23,6 +24,7 @@ app.add_middleware(
 
 @app.get("/api/health")
 def health() -> dict:
+    """A health check endpoint that returns the status of the application."""
     return {"status": "ok"}
 
 app.include_router(uploads.router)
@@ -42,5 +44,3 @@ if __name__ == "__main__":
         port=8000,
         reload=True,
     )
-
-
