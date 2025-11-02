@@ -1,13 +1,14 @@
 """This module provides a function to compile LaTeX source code to a PDF file."""
 
+import subprocess
+import shutil
 from pathlib import Path
-from pylatex import Document, NoEscape
 
 
 def compile_latex_to_pdf(
     latex_source_path: Path, pdf_out_path: Path
 ) -> tuple[bool, str | None]:
-    """Compiles a LaTeX source file to a PDF file.
+    """Compiles a LaTeX source file to a PDF file using pdflatex.
 
     Args:
         latex_source_path: The path to the LaTeX source file.
@@ -19,18 +20,44 @@ def compile_latex_to_pdf(
     """
     latex_content = latex_source_path.read_text(encoding="utf-8")
 
-    # Create a new document
-    doc = Document()
+    # Check if the content is a full document or just a fragment
+    if "\\documentclass" not in latex_content:
+        # Wrap the content in a minimal document structure
+        latex_content = f"""
+\\documentclass{{article}}
+\\begin{{document}}
+{latex_content}
+\\end{{document}}
+"""
+        latex_source_path.write_text(latex_content, encoding="utf-8")
 
-    # Add the LaTeX content
-    doc.append(NoEscape(latex_content))
+    command = [
+        "pdflatex",
+        "-output-directory",
+        str(pdf_out_path.parent),
+        str(latex_source_path),
+    ]
 
-    # Compile the document
     try:
-        doc.generate_pdf(str(pdf_out_path.with_suffix("")), clean_tex=False)
+        # The `capture_output=True` argument captures the stdout and stderr streams,
+        # and `text=True` decodes them as text.
+        # The `check=True` argument raises a `CalledProcessError` if the command
+        # returns a non-zero exit code.
+        subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        # Move the generated PDF to the desired output path
+        generated_pdf = pdf_out_path.parent / latex_source_path.with_suffix(".pdf").name
+        shutil.move(generated_pdf, pdf_out_path)
         return (True, None)
-    except Exception as e:
-        # Catching a broad exception because pylatex can raise a variety of
-        # exceptions during compilation, and it's not always clear which one
-        # will be raised.
-        return (False, str(e))
+    except subprocess.CalledProcessError as e:
+        # The error message from pdflatex is in the stderr stream
+        return (False, e.stderr)
+    except FileNotFoundError:
+        return (
+            False,
+            "pdflatex command not found. Is LaTeX installed and in your PATH?",
+        )
