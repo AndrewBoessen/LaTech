@@ -4,8 +4,16 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import uploads, preprocess, convert, compile as compile_routes, status
+from app.routers import (
+    uploads, preprocess, convert, compile as compile_routes, status
+)
 
+
+
+from app.database import engine, Base
+from app.models import job
+
+job.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="LaTech FastAPI App")
 
@@ -33,6 +41,8 @@ app.include_router(preprocess.router)
 app.include_router(convert.router)
 app.include_router(compile_routes.router)
 app.include_router(status.router)
+
+
 
 
 if __name__ == "__main__":

@@ -14,9 +14,24 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   return res;
 }
 
-export type UploadResp = { uploadId: string };
-export type PreprocessResp = { processedId: string };
-export type ConvertResp = { latexId: string; latex: string };
-export type CompileResp = { pdfId: string };
+export type JobResp = { job_id: string };
 
+export type Job = {
+  job_id: string;
+  status: string;
+  upload_id?: string;
+  processed_id?: string;
+  latex_id?: string;
+  pdf_id?: string;
+};
+
+export async function getJobs(): Promise<Job[]> {
+  return await api<Job[]>('/api/jobs');
+}
+
+export async function deleteJob(jobId: string): Promise<{ message: string }> {
+  return await api<{ message: string }>(`/api/jobs/${jobId}`, {
+    method: 'DELETE',
+  });
+}
 

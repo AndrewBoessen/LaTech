@@ -23,36 +23,7 @@ class PreprocessOptions(BaseModel):
     resize: Optional[PreprocessResize] = None
 
 
-class UploadResponse(BaseModel):
-    """The response model for an image upload."""
 
-    uploadId: str
-
-
-class PreprocessResponse(BaseModel):
-    """The response model for a preprocessing request."""
-
-    processedId: str
-
-
-class ConvertResponse(BaseModel):
-    """The response model for a conversion request."""
-
-    latexId: str
-    latex: str
-
-
-class CompileRequest(BaseModel):
-    """The request model for a compilation request."""
-
-    latex: Optional[str] = None
-    latexId: Optional[str] = None
-
-
-class CompileResponse(BaseModel):
-    """The response model for a compilation request."""
-
-    pdfId: str
 
 
 class StatusResponse(BaseModel):
@@ -61,3 +32,30 @@ class StatusResponse(BaseModel):
     state: str
     progress: int
     error: Optional[str] = None
+
+
+class Job(BaseModel):
+    """Defines a job for the pipeline."""
+
+    job_id: str
+    status: str
+    upload_id: Optional[str] = None
+    processed_id: Optional[str] = None
+    latex_id: Optional[str] = None
+    pdf_id: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+
+class JobCreate(BaseModel):
+    """Defines the request for creating a job."""
+
+    upload_id: str
+    options: PreprocessOptions
+
+
+class JobResponse(BaseModel):
+    """The response model for a job creation request."""
+
+    job_id: str
