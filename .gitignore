@@ -55,4 +55,5 @@ frontend/.env.*
 # Ignore all data (images, uploads, pdf, processed files, etc.)
 data/
 
-
+# Database
+jobs.db
