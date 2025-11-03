@@ -80,34 +80,44 @@ def compile_latex(
     return JobResponse(job_id=job_id)
 
 
-@router.get("/latex/{latex_id}")
-def get_latex(latex_id: str):
+@router.get("/latex/{job_id}")
+def get_latex(job_id: str, db: Session = Depends(get_db)):
     """Retrieves a LaTeX source file.
 
     Args:
-        latex_id: The ID of the LaTeX source file to retrieve.
+        job_id: The ID of the job LaTeX source file to retrieve.
 
     Returns:
         A PlainTextResponse containing the LaTeX source code.
     """
     storage.ensure_dirs()
+    job = db.query(job_model.Job).filter(job_model.Job.job_id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="jobId not found")
+
+    latex_id = job.latex_id
     latex_path = storage.path_for_latex(latex_id)
     if not latex_path.exists():
         raise HTTPException(status_code=404, detail="latexId not found")
     return PlainTextResponse(latex_path.read_text(encoding="utf-8"))
 
 
-@router.get("/pdf/{pdf_id}")
-def get_pdf(pdf_id: str):
+@router.get("/pdf/{job_id}")
+def get_pdf(job_id: str, db: Session = Depends(get_db)):
     """Retrieves a compiled PDF file.
 
     Args:
-        pdf_id: The ID of the PDF file to retrieve.
+        pdf_id: The ID of the job PDF file to retrieve.
 
     Returns:
         A FileResponse containing the PDF file.
     """
     storage.ensure_dirs()
+    job = db.query(job_model.Job).filter(job_model.Job.job_id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="jobId not found")
+
+    pdf_id = job.pdf_id
     pdf_path = storage.path_for_pdf(pdf_id)
     if not pdf_path.exists():
         raise HTTPException(status_code=404, detail="pdfId not found")
