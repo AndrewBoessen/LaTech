@@ -1,6 +1,6 @@
 import { PUBLIC_API_BASE } from '$env/static/public';
 
-const API = PUBLIC_API_BASE || '';
+const API = PUBLIC_API_BASE || 'http://127.0.0.1:8000';
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(API + path, init);
