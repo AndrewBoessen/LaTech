@@ -4,6 +4,8 @@
   let status = "";
   let pdfUrl = "";
   let jobId = "";
+  let latexCode = "";
+  let previewStatus = "";
 
   async function doCompile() {
     if (!jobId) {
@@ -20,6 +22,24 @@
       status = "Compilation complete!";
     } catch (e) {
       status = String(e);
+    }
+  }
+
+  async function previewLatex() {
+    if (!jobId) {
+      previewStatus = "jobId not found";
+      return;
+    }
+    previewStatus = "Fetching LaTeX…";
+    try {
+      const resp = await fetch(`/api/latex/${encodeURIComponent(jobId)}`);
+      if (!resp.ok) {
+        throw new Error(await resp.text());
+      }
+      latexCode = await resp.text();
+      previewStatus = "LaTeX loaded.";
+    } catch (e) {
+      previewStatus = String(e);
     }
   }
 </script>
@@ -39,11 +59,18 @@
     >
     <div class="flex gap-2 items-center">
       <button class="btn" on:click={doCompile}>Compile</button>
+      <button class="btn" on:click={previewLatex}>Preview LaTeX</button>
       <span class="subtle">{status}</span>
     </div>
   </div>
   {#if pdfUrl}
     <a href={pdfUrl} target="_blank">View PDF</a>
   {/if}
+  {#if latexCode}
+    <div class="grid gap-2">
+      <h2 class="title">LaTeX Preview</h2>
+      <pre class="panel">{latexCode}</pre>
+      <span class="subtle">{previewStatus}</span>
+    </div>
+  {/if}
 </section>
-

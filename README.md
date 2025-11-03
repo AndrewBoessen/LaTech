@@ -74,7 +74,7 @@ Visit `http://localhost:5173`. Ensure the backend is running (see "Run (developm
 
 ### Environment
 
-- `PUBLIC_API_BASE` (optional): override API base URL. Example `.env`:
+- `PUBLIC_API_BASE` (optional): override API base URL. Example `frontend/.env`:
 
 ```
 PUBLIC_API_BASE=http://127.0.0.1:8000
@@ -104,18 +104,19 @@ data/
   uploads/ processed/ latex/ pdf/
 ```
 
-#### Planned API routes
+#### API routes
 
-- POST `/api/uploads` (multipart/form-data): upload an image → `{ uploadId }`
-- POST `/api/preprocess/{uploadId}` (JSON options): apply preprocessing → `{ processedId }`
-  - options: `{ grayscale: bool, denoise: bool, threshold: number|null, resize: { width, height }|null }`
-- POST `/api/convert/{processedId}`: OCR/convert → `{ latexId, latex }`
-- POST `/api/compile` (JSON with `{ latex }` or `{ latexId }`): compile → `{ pdfId }`
-- GET `/api/pdf/{pdfId}`: return compiled PDF (application/pdf)
-- GET `/api/status/{jobId}`: optional async job status → `{ state, progress, error? }`
-- GET `/api/health`: health check
+- POST `/api/uploads`: upload an image → `{ jobId }`
+- POST `/api/preprocess/{jobId}`: apply preprocessing → `{ jobId }`
+- POST `/api/convert/{jobId}`: OCR/convert → `{ jobId }`
+- POST `/api/compile/{jobId}`: compile → `{ jobId }`
+- GET `/api/latex/{jobId}`: return LaTeX source
+- GET `/api/pdf/{jobId}`: return compiled PDF
+- GET `/api/status/{jobId}`: get job status
+- GET `/api/jobs`: get all jobs
+- DELETE `/api/jobs/{jobId}`: delete a job
 
 Notes:
+
 - Endpoints may return `{ jobId }` for async processing with polling on `/api/status/{jobId}`.
 - Storage can be local under `data/` with short-lived cleanup.
-
