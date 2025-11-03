@@ -24,7 +24,7 @@ def path_for_upload(upload_id: str) -> Path:
 
 def path_for_processed(processed_id: str) -> Path:
     """Returns the path to a processed file."""
-    return PROCESSED_DIR / f"{processed_id}"
+    return PROCESSED_DIR / f"{processed_id}.png"
 
 
 def path_for_latex(latex_id: str) -> Path:

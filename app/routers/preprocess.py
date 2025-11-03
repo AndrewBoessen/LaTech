@@ -22,7 +22,7 @@ def get_db():
         db.close()
 
 
-def run_preprocessing(job_id: str, options):
+def run_preprocessing(job_id: str, options: PreprocessOptions):
     """Runs the image preprocessing.
 
     Args:
@@ -48,14 +48,17 @@ def run_preprocessing(job_id: str, options):
     dst = storage.path_for_processed(processed_id)
     apply_preprocessing(src, dst, options)
     job.processed_id = processed_id
-    job.status = "converting"
+    job.status = "ready to convert"
     db.commit()
     db.close()
 
 
 @router.post("/preprocess/{job_id}", response_model=JobResponse)
 def preprocess_image(
-    job_id: str, body: PreprocessOptions, background_tasks: BackgroundTasks, db: Session = Depends(get_db)
+    job_id: str,
+    body: PreprocessOptions,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
 ) -> JobResponse:
     """Applies preprocessing to an uploaded image.
 
@@ -72,5 +75,5 @@ def preprocess_image(
     job = db.query(job_model.Job).filter(job_model.Job.job_id == job_id).first()
     if not job:
         raise HTTPException(status_code=404, detail="jobId not found")
-    background_tasks.add_task(run_preprocessing, job_id, body.options)
+    background_tasks.add_task(run_preprocessing, job_id, body)
     return JobResponse(job_id=job_id)

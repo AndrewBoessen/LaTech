@@ -73,3 +73,4 @@ def convert_to_latex(
         raise HTTPException(status_code=404, detail="jobId not found")
     background_tasks.add_task(run_conversion, job_id)
     return JobResponse(job_id=job_id)
+

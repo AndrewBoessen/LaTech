@@ -41,9 +41,8 @@ async def upload_image(
     dest = storage.path_for_upload(upload_id)
     dest.write_bytes(await file.read())
     job_id = str(uuid.uuid4())
-    job = job_model.Job(job_id=job_id, status="pending", upload_id=upload_id)
+    job = job_model.Job(job_id=job_id, status="uploaded", upload_id=upload_id)
     db.add(job)
     db.commit()
     db.refresh(job)
     return JobResponse(job_id=job_id)
-
