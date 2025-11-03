@@ -29,3 +29,9 @@ export async function getJobs(): Promise<Job[]> {
   return await api<Job[]>('/api/jobs');
 }
 
+export async function deleteJob(jobId: string): Promise<{ message: string }> {
+  return await api<{ message: string }>(`/api/jobs/${jobId}`, {
+    method: 'DELETE',
+  });
+}
+

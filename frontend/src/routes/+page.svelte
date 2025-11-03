@@ -1,6 +1,6 @@
 <script lang="ts">
   import LatexBackground from "../lib/components/LatexBackground.svelte";
-  import { getJobs, type Job } from "../lib/api";
+  import { getJobs, deleteJob, type Job } from "../lib/api";
   import { onMount } from "svelte";
 
   let jobs: Job[] = [];
@@ -8,6 +8,16 @@
   onMount(async () => {
     jobs = await getJobs();
   });
+
+  async function handleDelete(jobId: string) {
+    try {
+      await deleteJob(jobId);
+      jobs = jobs.filter((job) => job.job_id !== jobId);
+    } catch (error) {
+      console.error("Error deleting job:", error);
+      alert("Failed to delete job.");
+    }
+  }
 </script>
 
 <LatexBackground />
@@ -50,6 +60,10 @@
             class="px-4 py-3 title-font tracking-wider font-large text-gray-900 text-base bg-gray-100"
             >PDF ID</th
           >
+          <th
+            class="px-4 py-3 title-font tracking-wider font-large text-gray-900 text-base bg-gray-100"
+            >Actions</th
+          >
         </tr>
       </thead>
       <tbody>
@@ -61,6 +75,14 @@
             <td class="px-4 py-3">{job.processed_id}</td>
             <td class="px-4 py-3">{job.latex_id}</td>
             <td class="px-4 py-3">{job.pdf_id}</td>
+            <td class="px-4 py-3">
+              <button
+                on:click={() => handleDelete(job.job_id)}
+                class="text-red-500 hover:text-red-700"
+              >
+                Delete
+              </button>
+            </td>
           </tr>
         {/each}
       </tbody>
