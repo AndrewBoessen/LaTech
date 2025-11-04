@@ -44,13 +44,17 @@ def run_conversion(job_id: str):
         db.close()
         return
     latex_id = str(uuid.uuid4())
-    latex = convert_image_to_latex(src)
-    latex_path = storage.path_for_latex(latex_id)
-    latex_path.write_text(latex, encoding="utf-8")
-    job.latex_id = latex_id
-    job.status = "compiling"
-    db.commit()
-    db.close()
+    try:
+        latex = convert_image_to_latex(src)
+        latex_path = storage.path_for_latex(latex_id)
+        latex_path.write_text(latex, encoding="utf-8")
+        job.latex_id = latex_id
+        job.status = "compiling"
+    except Exception:
+        job.status = "failed"
+    finally:
+        db.commit()
+        db.close()
 
 
 @router.post("/convert/{job_id}", response_model=JobResponse)
