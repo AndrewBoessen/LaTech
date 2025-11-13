@@ -1,6 +1,7 @@
 """This module provides a function to convert an image to LaTeX using Gemini."""
 
 import os
+import re
 from pathlib import Path
 from google import genai
 
@@ -28,6 +29,13 @@ def convert_image_to_latex(image_path: Path) -> str:
         response = client.models.generate_content(
             model=MODEL_NAME, contents=[file, PROMPT]
         )
+        if not response or not response.text:
+            raise ValueError("Invalid or empty response from the model.")
+
+        # Check for a markdown embedded latex code. Extract this code and then return if it exists
+        match = re.search(r"```latex(.*)```", response.text, re.DOTALL)
+        if match:
+            return match.group(1).strip()
         return response.text
     except Exception as e:
         # Re-raise exceptions to be handled by the calling router

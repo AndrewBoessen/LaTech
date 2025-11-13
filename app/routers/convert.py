@@ -49,7 +49,7 @@ def run_conversion(job_id: str):
         latex_path = storage.path_for_latex(latex_id)
         latex_path.write_text(latex, encoding="utf-8")
         job.latex_id = latex_id
-        job.status = "compiling"
+        job.status = "ready to compile"
     except Exception:
         job.status = "failed"
     finally:
@@ -77,4 +77,3 @@ def convert_to_latex(
         raise HTTPException(status_code=404, detail="jobId not found")
     background_tasks.add_task(run_conversion, job_id)
     return JobResponse(job_id=job_id)
-

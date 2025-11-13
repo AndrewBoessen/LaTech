@@ -48,7 +48,7 @@ def run_preprocessing(job_id: str, options: PreprocessOptions):
     dst = storage.path_for_processed(processed_id)
     apply_preprocessing(src, dst, options)
     job.processed_id = processed_id
-    job.status = "converting"
+    job.status = "ready to convert"
     db.commit()
     db.close()
 
