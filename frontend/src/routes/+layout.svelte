@@ -33,7 +33,11 @@
           stroke="currentColor"
           class="w-6 h-6"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>
@@ -43,12 +47,14 @@
         <li class="mb-2">
           <div class="text-sm">
             <p class="font-semibold">{job.job_id}</p>
-            <p class="capitalize {job.status === 'failed' ? 'text-red-500' : ''}">
+            <p
+              class="capitalize {job.status === 'failed' ? 'text-red-500' : ''}"
+            >
               {job.status}
             </p>
-            {#if job.status === 'complete' && job.pdf_id}
+            {#if job.status === "complete" && job.job_id}
               <a
-                href={`/api/pdf/${job.pdf_id}`}
+                href={`/api/pdf/${job.job_id}`}
                 target="_blank"
                 class="text-blue-500 hover:underline"
               >
@@ -64,7 +70,11 @@
   <!-- Main content -->
   <main class="flex-1 flex flex-col">
     <div class="container py-10 flex-1 flex flex-col">
-      <button on:click={toggleMenu} aria-label="Toggle menu" class="fixed top-4 left-4 z-10 {showMenu ? 'hidden' : ''}">
+      <button
+        on:click={toggleMenu}
+        aria-label="Toggle menu"
+        class="fixed top-4 left-4 z-10 {showMenu ? 'hidden' : ''}"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
