@@ -23,6 +23,7 @@ export type Job = {
   processed_id?: string;
   latex_id?: string;
   pdf_id?: string;
+  error_message?: string;
 };
 
 export async function getJobs(): Promise<Job[]> {

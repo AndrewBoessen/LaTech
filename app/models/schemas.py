@@ -43,6 +43,7 @@ class Job(BaseModel):
     processed_id: Optional[str] = None
     latex_id: Optional[str] = None
     pdf_id: Optional[str] = None
+    error_message: Optional[str] = None
 
     class Config:
         orm_mode = True

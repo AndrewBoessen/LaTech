@@ -38,24 +38,21 @@ def run_compilation(job_id: str):
     job.status = "compiling"
     db.commit()
 
-    latex_path = storage.path_for_latex(job.latex_id)
-    if not latex_path.exists():
+    try:
+        latex_path = storage.path_for_latex(job.latex_id)
+        if not latex_path.exists():
+            raise FileNotFoundError("LaTeX source file not found.")
+        pdf_id = str(uuid.uuid4())
+        pdf_path = storage.path_for_pdf(pdf_id)
+        compile_latex_to_pdf(latex_path, pdf_path)
+        job.pdf_id = pdf_id
+        job.status = "complete"
+    except Exception as e:
         job.status = "failed"
+        job.error_message = str(e)
+    finally:
         db.commit()
         db.close()
-        return
-    pdf_id = str(uuid.uuid4())
-    pdf_path = storage.path_for_pdf(pdf_id)
-    success, _ = compile_latex_to_pdf(latex_path, pdf_path)
-    if not success:
-        job.status = "failed"
-        db.commit()
-        db.close()
-        return
-    job.pdf_id = pdf_id
-    job.status = "complete"
-    db.commit()
-    db.close()
 
 
 @router.post("/compile/{job_id}", response_model=JobResponse)

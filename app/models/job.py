@@ -16,3 +16,4 @@ class Job(Base):
     processed_id = Column(String, nullable=True)
     latex_id = Column(String, nullable=True)
     pdf_id = Column(String, nullable=True)
+    error_message = Column(String, nullable=True)

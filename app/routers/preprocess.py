@@ -38,19 +38,21 @@ def run_preprocessing(job_id: str, options: PreprocessOptions):
     job.status = "preprocessing"
     db.commit()
 
-    src = storage.path_for_upload(job.upload_id)
-    if not src.exists():
+    try:
+        src = storage.path_for_upload(job.upload_id)
+        if not src.exists():
+            raise FileNotFoundError("Uploaded image not found.")
+        processed_id = str(uuid.uuid4())
+        dst = storage.path_for_processed(processed_id)
+        apply_preprocessing(src, dst, options)
+        job.processed_id = processed_id
+        job.status = "ready to convert"
+    except Exception as e:
         job.status = "failed"
+        job.error_message = str(e)
+    finally:
         db.commit()
         db.close()
-        return
-    processed_id = str(uuid.uuid4())
-    dst = storage.path_for_processed(processed_id)
-    apply_preprocessing(src, dst, options)
-    job.processed_id = processed_id
-    job.status = "ready to convert"
-    db.commit()
-    db.close()
 
 
 @router.post("/preprocess/{job_id}", response_model=JobResponse)

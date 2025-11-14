@@ -1,11 +1,22 @@
 <script lang="ts">
-  import { api, type JobResp } from "$lib/api";
+  import { api, type Job, type JobResp } from "$lib/api";
+  import { page } from "$app/stores";
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
 
   let status = "";
   let pdfUrl = "";
   let jobId = "";
+  let job: Job | null = null;
   let latexCode = "";
   let previewStatus = "";
+
+  onMount(() => {
+    jobId = $page.url.searchParams.get("id") || "";
+    if (jobId) {
+      pollStatus();
+    }
+  });
 
   async function doCompile() {
     if (!jobId) {
@@ -14,15 +25,33 @@
     }
     status = "Compiling…";
     try {
-      const data = await api<JobResp>(
+      await api<JobResp>(
         `/api/compile/${encodeURIComponent(jobId)}`,
         { method: "POST" },
       );
-      pdfUrl = `/api/pdf/${data.job_id}`;
-      status = "Compilation complete!";
+      pollStatus();
     } catch (e) {
       status = String(e);
     }
+  }
+
+  async function pollStatus() {
+    if (!jobId) return;
+    const interval = setInterval(async () => {
+      try {
+        job = await api<Job>(`/api/status/${encodeURIComponent(jobId)}`);
+        status = job.status;
+        if (job.status === "complete") {
+          clearInterval(interval);
+          await goto(`/preview?id=${jobId}`);
+        } else if (job.status === "failed") {
+          clearInterval(interval);
+        }
+      } catch (e) {
+        status = String(e);
+        clearInterval(interval);
+      }
+    }, 2000);
   }
 
   async function previewLatex() {
@@ -53,6 +82,7 @@
     <label
       >Job ID <input
         type="text"
+        readonly
         bind:value={jobId}
         placeholder="paste jobId"
       /></label
@@ -69,7 +99,7 @@
   {#if latexCode}
     <div class="grid gap-2">
       <h2 class="title">LaTeX Preview</h2>
-      <pre class="panel">{latexCode}</pre>
+      <pre class="panel" style="overflow-x: auto;">{latexCode}</pre>
       <span class="subtle">{previewStatus}</span>
     </div>
   {/if}

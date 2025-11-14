@@ -37,21 +37,19 @@ def run_conversion(job_id: str):
     job.status = "converting"
     db.commit()
 
-    src = storage.path_for_processed(job.processed_id)
-    if not src.exists():
-        job.status = "failed"
-        db.commit()
-        db.close()
-        return
-    latex_id = str(uuid.uuid4())
     try:
+        src = storage.path_for_processed(job.processed_id)
+        if not src.exists():
+            raise FileNotFoundError("Processed image not found.")
+        latex_id = str(uuid.uuid4())
         latex = convert_image_to_latex(src)
         latex_path = storage.path_for_latex(latex_id)
         latex_path.write_text(latex, encoding="utf-8")
         job.latex_id = latex_id
         job.status = "ready to compile"
-    except Exception:
+    except Exception as e:
         job.status = "failed"
+        job.error_message = str(e)
     finally:
         db.commit()
         db.close()
