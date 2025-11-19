@@ -1,13 +1,24 @@
 <script lang="ts">
-  import { api, type JobResp } from "$lib/api";
+  import { api, type Job, type JobResp } from "$lib/api";
+  import { page } from "$app/stores";
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
 
   let status = "";
   let jobId = "";
+  let job: Job | null = null;
   let options = {
     grayscale: true,
     denoise: true,
-    deskew: true,
+    adaptive_threshold: true,
   };
+
+  onMount(() => {
+    jobId = $page.url.searchParams.get("id") || "";
+    if (jobId) {
+      pollStatus();
+    }
+  });
 
   async function doPreprocess() {
     if (!jobId) {
@@ -21,10 +32,29 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ options }),
       });
-      status = "Preprocessing complete!";
+      pollStatus();
     } catch (e) {
       status = String(e);
     }
+  }
+
+  async function pollStatus() {
+    if (!jobId) return;
+    const interval = setInterval(async () => {
+      try {
+        job = await api<Job>(`/api/status/${encodeURIComponent(jobId)}`);
+        status = job.status;
+        if (job.status === "ready to convert") {
+          clearInterval(interval);
+          await goto(`/convert?id=${jobId}`);
+        } else if (job.status === "failed") {
+          clearInterval(interval);
+        }
+      } catch (e) {
+        status = String(e);
+        clearInterval(interval);
+      }
+    }, 2000);
   }
 </script>
 
@@ -37,6 +67,7 @@
     <label
       >Job ID <input
         type="text"
+        readonly
         bind:value={jobId}
         placeholder="paste jobId"
       /></label
@@ -47,7 +78,9 @@
     <label
       ><input type="checkbox" bind:checked={options.denoise} /> Denoise</label
     >
-    <label><input type="checkbox" bind:checked={options.deskew} /> Deskew</label
+    <label
+      ><input type="checkbox" bind:checked={options.adaptive_threshold} /> Adaptive
+      Threshold</label
     >
     <div class="flex gap-2 items-center">
       <button class="btn" on:click={doPreprocess}>Preprocess</button>

@@ -1,8 +1,19 @@
 <script lang="ts">
-  import { api, type JobResp } from "$lib/api";
+  import { api, type Job, type JobResp } from "$lib/api";
+  import { page } from "$app/stores";
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
 
   let status = "";
   let jobId = "";
+  let job: Job | null = null;
+
+  onMount(() => {
+    jobId = $page.url.searchParams.get("id") || "";
+    if (jobId) {
+      pollStatus();
+    }
+  });
 
   async function doConvert() {
     if (!jobId) {
@@ -14,10 +25,29 @@
       await api<JobResp>(`/api/convert/${encodeURIComponent(jobId)}`, {
         method: "POST",
       });
-      status = "Conversion complete!";
+      pollStatus();
     } catch (e) {
       status = String(e);
     }
+  }
+
+  async function pollStatus() {
+    if (!jobId) return;
+    const interval = setInterval(async () => {
+      try {
+        job = await api<Job>(`/api/status/${encodeURIComponent(jobId)}`);
+        status = job.status;
+        if (job.status === "ready to compile") {
+          clearInterval(interval);
+          await goto(`/compile?id=${jobId}`);
+        } else if (job.status === "failed") {
+          clearInterval(interval);
+        }
+      } catch (e) {
+        status = String(e);
+        clearInterval(interval);
+      }
+    }, 2000);
   }
 </script>
 
@@ -32,6 +62,7 @@
     <label
       >Job ID <input
         type="text"
+        readonly
         bind:value={jobId}
         placeholder="paste jobId"
       /></label
@@ -42,4 +73,3 @@
     </div>
   </div>
 </section>
-

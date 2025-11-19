@@ -18,11 +18,13 @@ export type JobResp = { job_id: string };
 
 export type Job = {
   job_id: string;
+  name?: string;
   status: string;
   upload_id?: string;
   processed_id?: string;
   latex_id?: string;
   pdf_id?: string;
+  error_message?: string;
 };
 
 export async function getJobs(): Promise<Job[]> {

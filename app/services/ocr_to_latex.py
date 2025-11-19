@@ -37,6 +37,6 @@ def convert_image_to_latex(image_path: Path) -> str:
         if match:
             return match.group(1).strip()
         return response.text
-    except Exception as e:
+    except ValueError as e:
         # Re-raise exceptions to be handled by the calling router
         raise RuntimeError(f"Failed to convert image to LaTeX: {e}") from e

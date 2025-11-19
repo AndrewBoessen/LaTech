@@ -1,5 +1,6 @@
 <script lang="ts">
   import { api, type JobResp } from "$lib/api";
+  import { goto } from "$app/navigation";
   let file: File | null = null;
   let status = "";
   let preview: string | null = null;
@@ -34,6 +35,7 @@
       });
       jobId = data.job_id;
       status = `Uploaded: ${jobId}`;
+      await goto(`/preprocess?id=${jobId}`);
     } catch (e) {
       status = String(e);
     }

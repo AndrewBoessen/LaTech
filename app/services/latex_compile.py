@@ -5,18 +5,15 @@ import shutil
 from pathlib import Path
 
 
-def compile_latex_to_pdf(
-    latex_source_path: Path, pdf_out_path: Path
-) -> tuple[bool, str | None]:
+def compile_latex_to_pdf(latex_source_path: Path, pdf_out_path: Path) -> None:
     """Compiles a LaTeX source file to a PDF file using pdflatex.
 
     Args:
         latex_source_path: The path to the LaTeX source file.
         pdf_out_path: The path to write the PDF file to.
 
-    Returns:
-        A tuple containing a boolean indicating success or failure, and an
-        error message if the compilation failed.
+    Raises:
+        RuntimeError: If the compilation fails.
     """
     latex_content = latex_source_path.read_text(encoding="utf-8")
 
@@ -25,6 +22,8 @@ def compile_latex_to_pdf(
         # Wrap the content in a minimal document structure
         latex_content = f"""
 \\documentclass{{article}}
+\\usepackage{{amsmath}}
+\\usepackage{{graphicx}}
 \\begin{{document}}
 {latex_content}
 \\end{{document}}
@@ -48,16 +47,15 @@ def compile_latex_to_pdf(
             capture_output=True,
             text=True,
             check=True,
+            encoding="utf-8",
         )
         # Move the generated PDF to the desired output path
         generated_pdf = pdf_out_path.parent / latex_source_path.with_suffix(".pdf").name
         shutil.move(generated_pdf, pdf_out_path)
-        return (True, None)
     except subprocess.CalledProcessError as e:
         # The error message from pdflatex is in the stderr stream
-        return (False, e.stderr)
-    except FileNotFoundError:
-        return (
-            False,
-            "pdflatex command not found. Is LaTeX installed and in your PATH?",
-        )
+        raise RuntimeError(f"LaTeX compilation failed: {e.stderr}") from e
+    except FileNotFoundError as e:
+        raise RuntimeError(
+            "pdflatex command not found. Is LaTeX installed and in your PATH?"
+        ) from e

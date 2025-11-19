@@ -21,6 +21,7 @@ class PreprocessOptions(BaseModel):
     denoise: bool = False
     threshold: Optional[int] = None
     resize: Optional[PreprocessResize] = None
+    adaptive_threshold: bool = False
 
 
 
@@ -38,11 +39,13 @@ class Job(BaseModel):
     """Defines a job for the pipeline."""
 
     job_id: str
+    name: Optional[str] = None
     status: str
     upload_id: Optional[str] = None
     processed_id: Optional[str] = None
     latex_id: Optional[str] = None
     pdf_id: Optional[str] = None
+    error_message: Optional[str] = None
 
     class Config:
         orm_mode = True

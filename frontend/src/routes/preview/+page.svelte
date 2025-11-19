@@ -1,6 +1,13 @@
 <script lang="ts">
+  import { page } from "$app/stores";
+  import { onMount } from "svelte";
+
   let jobId = "";
   $: src = jobId ? `/api/pdf/${encodeURIComponent(jobId)}` : "";
+
+  onMount(() => {
+    jobId = $page.url.searchParams.get("id") || "";
+  });
 </script>
 
 <section class="panel grid gap-8">
