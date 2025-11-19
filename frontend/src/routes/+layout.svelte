@@ -46,7 +46,7 @@
       {#each jobs as job}
         <li class="mb-2">
           <div class="text-sm">
-            <p class="font-semibold">{job.job_id}</p>
+            <p class="font-semibold">{job.name || job.job_id}</p>
             <p
               class="capitalize {job.status === 'failed' ? 'text-red-500' : ''}"
             >

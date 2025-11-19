@@ -18,6 +18,7 @@ export type JobResp = { job_id: string };
 
 export type Job = {
   job_id: string;
+  name?: string;
   status: string;
   upload_id?: string;
   processed_id?: string;

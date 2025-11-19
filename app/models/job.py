@@ -11,6 +11,7 @@ class Job(Base):
     __tablename__ = "jobs"
 
     job_id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=True)
     status = Column(String, index=True)
     upload_id = Column(String, nullable=True)
     processed_id = Column(String, nullable=True)

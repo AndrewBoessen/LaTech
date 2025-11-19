@@ -10,6 +10,7 @@
   let options = {
     grayscale: true,
     denoise: true,
+    adaptive_threshold: true,
   };
 
   onMount(() => {
@@ -76,6 +77,10 @@
     >
     <label
       ><input type="checkbox" bind:checked={options.denoise} /> Denoise</label
+    >
+    <label
+      ><input type="checkbox" bind:checked={options.adaptive_threshold} /> Adaptive
+      Threshold</label
     >
     <div class="flex gap-2 items-center">
       <button class="btn" on:click={doPreprocess}>Preprocess</button>

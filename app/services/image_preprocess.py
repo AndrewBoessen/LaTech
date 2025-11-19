@@ -28,7 +28,7 @@ def apply_preprocessing(
     if len(image.shape) == 2 or (len(image.shape) == 3 and image.shape[2] == 1):
         is_gray = True
 
-    if options.grayscale or (options.threshold is not None):
+    if options.grayscale or (options.threshold is not None) or options.adaptive_threshold:
         if not is_gray:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         is_gray = True
@@ -42,9 +42,14 @@ def apply_preprocessing(
             image = cv2.fastNlMeansDenoisingColored(image, None, 10, 10, 7, 21)
 
     # 4. Apply Thresholding (if requested)
-    if options.threshold is not None:
+    if options.adaptive_threshold and is_gray:
+        # Adaptive thresholding for "scanner-like" look
+        image = cv2.adaptiveThreshold(
+            image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
+        )
+    elif options.threshold is not None:
+        # Simple binary threshold
         # Image is guaranteed to be grayscale from step 2.
-        # We use the provided integer as a simple binary threshold value.
         _, image = cv2.threshold(image, options.threshold, 255, cv2.THRESH_BINARY)
 
     # 5. Apply Resize
