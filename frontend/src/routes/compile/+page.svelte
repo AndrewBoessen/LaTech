@@ -78,8 +78,8 @@
           <h3 class="font-medium mb-2">Status</h3>
           <div class="flex items-center gap-2">
             {#if isCompiling}
-              <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-              <span class="text-primary font-medium">Compiling...</span>
+              <div class="w-2 h-2 rounded-full bg-yelllow-500"></div>
+              <span class="text-yellow-600 font-medium">Processing</span>
             {:else if job?.status === "complete"}
               <div class="w-2 h-2 rounded-full bg-green-500"></div>
               <span class="text-green-600 font-medium">Complete</span>
