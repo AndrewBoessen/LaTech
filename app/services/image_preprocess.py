@@ -6,15 +6,21 @@ import cv2
 from app.models.schemas import PreprocessOptions
 
 
+from typing import Optional, Any
+import numpy as np
+
 def apply_preprocessing(
-    src_path: Path, dst_path: Path, options: PreprocessOptions
-) -> None:
+    src_path: Path, options: PreprocessOptions, dst_path: Optional[Path] = None
+) -> Optional[np.ndarray]:
     """Applies preprocessing to an image.
 
     Args:
         src_path: The path to the source image.
-        dst_path: The path to write the preprocessed image to.
         options: The preprocessing options.
+        dst_path: The path to write the preprocessed image to. If None, returns the image.
+
+    Returns:
+        The preprocessed image as a numpy array if dst_path is None, else None.
     """
     # 1. Load the image
     image = cv2.imread(str(src_path))
@@ -85,6 +91,11 @@ def apply_preprocessing(
         # If it's already wider than MIN_WIDTH, we do nothing.
 
     # 6. Save the final image
-    success = cv2.imwrite(str(dst_path), image)
-    if not success:
-        raise IOError(f"Failed to write preprocessed image to {dst_path}")
+    # 6. Save the final image or return it
+    if dst_path:
+        success = cv2.imwrite(str(dst_path), image)
+        if not success:
+            raise IOError(f"Failed to write preprocessed image to {dst_path}")
+        return None
+    else:
+        return image
