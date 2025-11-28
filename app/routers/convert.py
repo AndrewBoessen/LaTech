@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models import job as job_model
 from app.models.schemas import JobResponse
+from pydantic import BaseModel
 from app.models import storage
 from app.services.ocr_to_latex import convert_image_to_latex
 
@@ -75,3 +76,63 @@ def convert_to_latex(
         raise HTTPException(status_code=404, detail="jobId not found")
     background_tasks.add_task(run_conversion, job_id)
     return JobResponse(job_id=job_id)
+
+
+@router.get("/latex/{job_id}")
+def get_latex(job_id: str, db: Session = Depends(get_db)):
+    """Returns the generated LaTeX for a job.
+
+    Args:
+        job_id: The ID of the job.
+        db: The database session.
+
+    Returns:
+        The LaTeX content as a string.
+    """
+    from fastapi.responses import PlainTextResponse
+
+    storage.ensure_dirs()
+    job = db.query(job_model.Job).filter(job_model.Job.job_id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="jobId not found")
+
+    if not job.latex_id:
+        raise HTTPException(status_code=404, detail="LaTeX not generated yet")
+
+    path = storage.path_for_latex(job.latex_id)
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="LaTeX file not found")
+
+    return PlainTextResponse(path.read_text(encoding="utf-8"))
+
+
+class LatexUpdate(BaseModel):
+    content: str
+
+
+@router.post("/latex/{job_id}")
+def update_latex(
+    job_id: str,
+    body: LatexUpdate,
+    db: Session = Depends(get_db),
+):
+    """Updates the LaTeX content for a job.
+
+    Args:
+        job_id: The ID of the job.
+        body: The new LaTeX content.
+        db: The database session.
+    """
+    storage.ensure_dirs()
+    job = db.query(job_model.Job).filter(job_model.Job.job_id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="jobId not found")
+
+    if not job.latex_id:
+        raise HTTPException(status_code=404, detail="LaTeX not generated yet")
+
+    path = storage.path_for_latex(job.latex_id)
+    path.write_text(body.content, encoding="utf-8")
+
+    return {"status": "ok"}
+

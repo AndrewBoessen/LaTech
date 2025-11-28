@@ -217,7 +217,11 @@
       </div>
 
       <div class="mt-auto pt-4 border-t border-border">
-        <button class="btn w-full" on:click={doPreprocess} disabled={!jobId}>
+        <button
+          class="btn w-full !rounded-lg"
+          on:click={doPreprocess}
+          disabled={!jobId}
+        >
           Apply & Continue
         </button>
         {#if status}
