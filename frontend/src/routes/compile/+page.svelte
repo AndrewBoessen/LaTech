@@ -78,16 +78,16 @@
           <h3 class="font-medium mb-2">Status</h3>
           <div class="flex items-center gap-2">
             {#if isCompiling}
-              <div class="w-2 h-2 rounded-full bg-yelllow-500"></div>
+              <div class="w-2 h-2 rounded-lg bg-yellow-500"></div>
               <span class="text-yellow-600 font-medium">Processing</span>
             {:else if job?.status === "complete"}
-              <div class="w-2 h-2 rounded-full bg-green-500"></div>
+              <div class="w-2 h-2 rounded-lg bg-green-500"></div>
               <span class="text-green-600 font-medium">Complete</span>
             {:else if job?.status === "failed"}
-              <div class="w-2 h-2 rounded-full bg-red-500"></div>
+              <div class="w-2 h-2 rounded-lg bg-red-500"></div>
               <span class="text-red-600 font-medium">Failed</span>
             {:else}
-              <div class="w-2 h-2 rounded-full bg-subtle"></div>
+              <div class="w-2 h-2 rounded-lg bg-subtle"></div>
               <span class="text-subtle capitalize">{status || "Ready"}</span>
             {/if}
           </div>
@@ -97,7 +97,7 @@
       <div class="mt-auto pt-4 border-t border-border flex flex-col gap-3">
         {#if !pdfUrl}
           <button
-            class="btn w-full !rounded-full"
+            class="btn w-full !rounded-lg"
             on:click={doCompile}
             disabled={!jobId || isCompiling}
           >
@@ -107,7 +107,7 @@
           <a
             href={pdfUrl}
             download="output.pdf"
-            class="btn w-full !rounded-full text-center flex items-center justify-center gap-2"
+            class="btn w-full !rounded-lg text-center flex items-center justify-center gap-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +138,7 @@
         <h2 class="font-medium">Preview</h2>
         <button
           on:click={() => (showComparison = !showComparison)}
-          class="text-xs px-3 py-1.5 rounded-lg bg-surface-2 hover:bg-surface-3 transition-colors flex items-center gap-2"
+          class="text-xs px-3 py-1.5 rounded-lg bg-surface-2 hover:bg-surface-3 transition-colors flex items-center gap-2 border border-transparent hover:border-black"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -205,7 +205,7 @@
               class="w-full h-full flex flex-col items-center justify-center text-subtle gap-4"
             >
               <div
-                class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"
+                class="w-8 h-8 border-2 border-primary border-t-transparent rounded-lg animate-spin"
               ></div>
               <p>Compiling PDF...</p>
             </div>
