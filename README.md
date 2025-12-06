@@ -4,9 +4,7 @@
 
 A modern web application for converting images to LaTeX and compiling them to PDF. LaTech provides an intuitive interface for uploading images, preprocessing them, converting mathematical expressions to LaTeX format, and generating PDF documents.
 
-<video src="./assets/demo.mp4" controls width="640">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/a1416ead-f950-4023-abcf-6180fd8e137c
 
 ## Features
 
