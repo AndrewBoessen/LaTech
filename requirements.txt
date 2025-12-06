@@ -6,3 +6,4 @@ sqlalchemy
 opencv-python
 google-genai
 python-dotenv
+honcho
