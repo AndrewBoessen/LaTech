@@ -48,3 +48,28 @@ async def upload_image(
     db.commit()
     db.refresh(job)
     return JobResponse(job_id=job_id)
+
+
+@router.get("/uploads/{job_id}/image")
+def get_uploaded_image(job_id: str, db: Session = Depends(get_db)):
+    """Returns the uploaded image for a job.
+
+    Args:
+        job_id: The ID of the job.
+        db: The database session.
+
+    Returns:
+        A FileResponse containing the uploaded image.
+    """
+    from fastapi.responses import FileResponse
+
+    storage.ensure_dirs()
+    job = db.query(job_model.Job).filter(job_model.Job.job_id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="jobId not found")
+
+    path = storage.path_for_upload(job.upload_id)
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return FileResponse(path)

@@ -12,9 +12,9 @@
     </p>
     <a
       href="/upload"
-      class="bg-black hover:bg-gray-800 text-white font-bold py-4 px-8 text-xl"
+      class="bg-black hover:bg-gray-800 text-white font-bold py-4 px-8 rounded-xl text-xl"
     >
-      Upload Image
+      Get Started
     </a>
   </section>
 </div>

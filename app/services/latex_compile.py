@@ -32,6 +32,7 @@ def compile_latex_to_pdf(latex_source_path: Path, pdf_out_path: Path) -> None:
 
     command = [
         "pdflatex",
+        "-interaction=nonstopmode",
         "-output-directory",
         str(pdf_out_path.parent),
         str(latex_source_path),
