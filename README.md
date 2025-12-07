@@ -6,6 +6,10 @@ A modern web application for converting images to LaTeX and compiling them to PD
 
 https://github.com/user-attachments/assets/a1416ead-f950-4023-abcf-6180fd8e137c
 
+
+https://github.com/user-attachments/assets/bbcd2732-e4fa-4811-a388-b3e84b6da273
+
+
 ## Features
 
 - **Image Upload**: Upload images containing mathematical expressions
